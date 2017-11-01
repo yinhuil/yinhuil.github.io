@@ -2,37 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/11/01/git%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97/</loc>
+    
+    <lastmod>2017-11-01T05:10:00.582Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/categories/index.html</loc>
     
     <lastmod>2017-10-31T13:24:01.347Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/10/31/hello-world%20-%20%E5%89%AF%E6%9C%AC%20(3)/</loc>
-    
-    <lastmod>2017-10-31T10:12:05.806Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/10/31/hello-world%20-%20%E5%89%AF%E6%9C%AC/</loc>
-    
-    <lastmod>2017-10-31T10:12:05.806Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/10/31/hello-world/</loc>
-    
-    <lastmod>2017-10-31T10:12:05.806Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/10/31/hello-world%20-%20%E5%89%AF%E6%9C%AC%20(2)/</loc>
-    
-    <lastmod>2017-10-31T10:12:05.806Z</lastmod>
     
   </url>
   
