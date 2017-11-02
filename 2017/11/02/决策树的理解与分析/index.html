@@ -79,12 +79,37 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="YinHui&#39;s Bolg">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="本篇博客主要讲述决策树的构建和剪枝，分析ID3、C4.5和CART的差异，最后附上决策树的实现，下面开始我的表演 一、决策树介绍定义5.1 (决策树) ：分类决策树模型是一种描述对实例进行分类的树形结构。决策树由结点(node)和有向边(directed edge)组成。结点有两种类型：内部结点(internal node )和叶结点(leaf node)。内部结点表示一个特征或属性，叶结点表示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="决策树的理解与分析">
+<meta property="og:url" content="http://yoursite.com/2017/11/02/决策树的理解与分析/index.html">
 <meta property="og:site_name" content="YinHui&#39;s Bolg">
+<meta property="og:description" content="本篇博客主要讲述决策树的构建和剪枝，分析ID3、C4.5和CART的差异，最后附上决策树的实现，下面开始我的表演 一、决策树介绍定义5.1 (决策树) ：分类决策树模型是一种描述对实例进行分类的树形结构。决策树由结点(node)和有向边(directed edge)组成。结点有两种类型：内部结点(internal node )和叶结点(leaf node)。内部结点表示一个特征或属性，叶结点表示">
+<meta property="og:image" content="k:/blog/source/1509607721(1">
+<meta property="og:image" content="k:/blog/source/1509608563(1">
+<meta property="og:image" content="k:/blog/source/1509608634(1">
+<meta property="og:image" content="k:/blog/source/1509608944(1">
+<meta property="og:image" content="k:/blog/source/1509608972(1">
+<meta property="og:image" content="k:/blog/source/1509608841(1">
+<meta property="og:image" content="k:/blog/source/1509609130(1">
+<meta property="og:image" content="k:/blog/source/1509609252(1">
+<meta property="og:image" content="k:/blog/source/1509609274(1">
+<meta property="og:image" content="k:/blog/source/1509610141(1">
+<meta property="og:image" content="k:/blog/source/1509611102(1">
+<meta property="og:image" content="k:/blog/source/1509611122(1">
+<meta property="og:image" content="k:/blog/source/1509611135(1">
+<meta property="og:image" content="k:/blog/source/1509611421(1">
+<meta property="og:image" content="k:/blog/source/1509611606(1">
+<meta property="og:image" content="k:/blog/source/1509611662(1">
+<meta property="og:image" content="k:/blog/source/1509611969(1">
+<meta property="og:image" content="k:/blog/source/1509612597(1">
+<meta property="og:image" content="k:/blog/source/1509613207(1">
+<meta property="og:image" content="k:/blog/source/1509623343(1">
+<meta property="og:updated_time" content="2017-11-02T07:24:02.227Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="YinHui&#39;s Bolg">
+<meta name="twitter:title" content="决策树的理解与分析">
+<meta name="twitter:description" content="本篇博客主要讲述决策树的构建和剪枝，分析ID3、C4.5和CART的差异，最后附上决策树的实现，下面开始我的表演 一、决策树介绍定义5.1 (决策树) ：分类决策树模型是一种描述对实例进行分类的树形结构。决策树由结点(node)和有向边(directed edge)组成。结点有两种类型：内部结点(internal node )和叶结点(leaf node)。内部结点表示一个特征或属性，叶结点表示">
+<meta name="twitter:image" content="k:/blog/source/1509607721(1">
 
 
 
@@ -114,13 +139,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/02/决策树的理解与分析/"/>
 
 
 
 
 
-  <title>YinHui's Bolg</title>
+  <title>决策树的理解与分析 | YinHui's Bolg</title>
   
 
 
@@ -139,8 +164,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -243,9 +267,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -275,9 +299,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/02/决策树的理解与分析/" itemprop="url">决策树的理解与分析</a></h1>
+          <h1 class="post-title" itemprop="name headline">决策树的理解与分析</h1>
         
 
         <div class="post-meta">
@@ -327,9 +349,7 @@
       
 
       
-        
-          
-            <p> 本篇博客主要讲述决策树的构建和剪枝，分析ID3、C4.5和CART的差异，最后附上决策树的实现，下面开始我的表演</p>
+        <p> 本篇博客主要讲述决策树的构建和剪枝，分析ID3、C4.5和CART的差异，最后附上决策树的实现，下面开始我的表演</p>
 <h1 id="一、决策树介绍"><a href="#一、决策树介绍" class="headerlink" title="一、决策树介绍"></a>一、决策树介绍</h1><p><strong>定义5.1 (决策树) ：</strong>分类决策树模型是一种描述对实例进行分类的树形结构。决策树由结点(node)和有向边(directed edge)组成。结点有两种类型：内部结点(internal node )和叶结点(leaf node)。内部结点表示一个特征或属性，叶结点表示一个类。用决策树分类，从根结点开始，对实例的某一特征进行测试，根据测试结果，将实例分配到其子结点；这时，每一个子结点对应着该特征的一个取值。如此递归地对实例进行测试并分配，直至达到叶结点。最后将实例分到叶结点的类中。</p>
 <p>图中圆和方框分别表示内部结点和叶结点</p>
 <p><img src="K:\blog\source\1509607721(1" alt="1509607721(1)">.jpg)</p>
@@ -388,8 +408,6 @@
 <p><img src="K:\blog\source\1509623343(1" alt="1509623343(1)">.jpg)</p>
 <p><strong>个人理解</strong>： 这里面的5.27已经是剪枝完毕后的表达式，也就是说原先的子结点已经变成当前的叶子节点，对于公式5.28，表示的是剪掉结点之前的损失函数。</p>
 
-          
-        
       
     </div>
     
@@ -406,145 +424,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/02/基于RNN的MNIST实现和解析-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="yinhui">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/images.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YinHui's Bolg">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/02/基于RNN的MNIST实现和解析-1/" itemprop="url">基于RNN的MNIST实现和解析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posté le</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-02T10:17:40+08:00">
-                2017-11-02
-              </time>
+              <a href="/2017/11/02/基于RNN的MNIST实现和解析-1/" rel="next" title="基于RNN的MNIST实现和解析">
+                <i class="fa fa-chevron-left"></i> 基于RNN的MNIST实现和解析
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>首先将代码附上，下面是对部分核心部件进行详细阐述</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">from</span> tensorflow.contrib <span class="keyword">import</span> rnn</div><div class="line"><span class="keyword">from</span> LSTM <span class="keyword">import</span> input_data</div><div class="line"></div><div class="line">mnist=input_data.read_data_sets(<span class="string">"K:/deepLearning/mnist"</span>,one_hot=<span class="keyword">True</span>)</div><div class="line"></div><div class="line"><span class="comment">#  超参数</span></div><div class="line">lr=<span class="number">0.001</span></div><div class="line">training_iters=<span class="number">1000000</span></div><div class="line">batch_size=<span class="number">128</span></div><div class="line"></div><div class="line">n_input=<span class="number">28</span></div><div class="line">n_step=<span class="number">28</span></div><div class="line">n_hidden_unis=<span class="number">128</span></div><div class="line">n_class=<span class="number">10</span></div><div class="line"></div><div class="line">x=tf.placeholder(tf.float32,[<span class="keyword">None</span>,n_step,n_input])</div><div class="line">y=tf.placeholder(tf.float32,[<span class="keyword">None</span>,n_class])</div><div class="line"></div><div class="line">weights=&#123;</div><div class="line">    <span class="string">'in'</span>:tf.Variable(tf.random_normal([n_input,n_hidden_unis])),</div><div class="line">    <span class="string">'out'</span>:tf.Variable(tf.random_normal([n_hidden_unis,n_class]))</div><div class="line">&#125;</div><div class="line">biases=&#123;</div><div class="line">    <span class="string">'in'</span>:tf.Variable(tf.constant(<span class="number">0.1</span>,shape=[n_hidden_unis,])),</div><div class="line">    <span class="string">'out'</span>:tf.Variable(tf.constant(<span class="number">0.1</span>,shape=[n_class,]))</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">RNN</span><span class="params">(X,weights,biases)</span>:</span></div><div class="line"><span class="comment">#     hidden layer for input to cell</span></div><div class="line">    X=tf.reshape(X,[<span class="number">-1</span>,n_input])</div><div class="line">    X_in=tf.matmul(X,weights[<span class="string">'in'</span>])+biases[<span class="string">'in'</span>]</div><div class="line">    X_in=tf.reshape(X_in,[<span class="number">-1</span>,n_step,n_hidden_unis])</div><div class="line"></div><div class="line">    lstm_cell=rnn.BasicLSTMCell(n_hidden_unis,forget_bias=<span class="number">1.0</span>,state_is_tuple=<span class="keyword">True</span>)</div><div class="line">    因为对于rnn来说，每一层相当于使用一个参数，每一层之间的参数是不一样的，下面一个就是初始化参数</div><div class="line">    _init_state=lstm_cell.zero_state(batch_size,dtype=tf.float32)</div><div class="line">    下面就是讲初始化参数，和rnn的cell放入dynamic_rnn，把整个程序连起来。             outputs,states=tf.nn.dynamic_rnn(lstm_cell,X_in,initial_state=_init_state,time_major=<span class="keyword">False</span>)</div><div class="line">    result=tf.matmul(states[<span class="number">1</span>],weights[<span class="string">'out'</span>])+biases[<span class="string">'out'</span>]</div><div class="line">    <span class="keyword">return</span> result</div><div class="line"></div><div class="line"></div><div class="line">pred=RNN(x,weights,biases)</div><div class="line">cost=tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred,labels=y))</div><div class="line">train_op=tf.train.AdamOptimizer(lr).minimize(cost)</div><div class="line"></div><div class="line">correct_pred=tf.equal(tf.argmax(pred,<span class="number">1</span>),tf.argmax(y,<span class="number">1</span>))</div><div class="line">accuracy=tf.reduce_mean(tf.cast(correct_pred,tf.float32))</div><div class="line"></div><div class="line">init=tf.global_variables_initializer()</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(init)</div><div class="line">    step=<span class="number">0</span></div><div class="line">    <span class="keyword">while</span> step*batch_size&lt;training_iters:</div><div class="line">        batch_xs,batch_ys=mnist.train.next_batch(batch_size)</div><div class="line">        batch_xs=batch_xs.reshape([batch_size,n_step,n_input])</div><div class="line">        sess.run([train_op],feed_dict=&#123;</div><div class="line">            x:batch_xs,</div><div class="line">            y:batch_ys</div><div class="line">        &#125;)</div><div class="line">        <span class="keyword">if</span> step%<span class="number">20</span>==<span class="number">0</span>:</div><div class="line">            print(sess.run(accuracy,feed_dict=&#123;</div><div class="line">                x:batch_xs,</div><div class="line">                y:batch_ys</div><div class="line">            &#125;))</div><div class="line">        step+=<span class="number">1</span></div></pre></td></tr></table></figure>
-<h2 id="RNN的核心部件Cell"><a href="#RNN的核心部件Cell" class="headerlink" title="RNN的核心部件Cell"></a>RNN的核心部件Cell</h2><p>在很多用到rnn的书籍和paper中都可以看到类似的图</p>
-<p><img src="K:\blog\source\1509587774(1" alt="1509587774(1)">.jpg)</p>
-<p>这是RNN的普遍结构，这里面每一个长方形表示一个cell，其实每一个cell又是一个略微复杂的结构</p>
-<p>如下图</p>
-<p><img src="K:\blog\source\1509587964(1" alt="1509587964(1)">.jpg)</p>
-<p>图中的context就是一个cell结构，可以看到它接受的输入有input(t)，context(t-1)，然后输出output(t)，比如像我们这个任务中，用到多层堆叠的rnn cell的话，也就是当前层的cell的output还要作为下一层cell的输入，因此可推出每个cell的输入和输出的shape是一样。如果输入的shape=(None, n)，加上context(t-1)同时作为输入部分，因此可以知道W的shape=(2n, n)。</p>
-<p>最重要的是每一个cell并不是一个简单的neuron unit，而是n个hidden units在代码中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rnn.BasicLSTMCell(n_hidden_units,forget_bias=1.0,state_is_tuple=True)</div></pre></td></tr></table></figure>
-<p>这里面的n_hidden_units,你可以定义多个隐藏层。</p>
-<p>从数字上体现就是，当你的输入是x.shape=[batch_size,step,inputsize]</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">X=tf.reshape(X,[-1,n_input])</div><div class="line">X_in=tf.matmul(X,weights[&apos;in&apos;])+biases[&apos;in&apos;]</div><div class="line">X_in=tf.reshape(X_in,[-1,step,n_hidden_units])</div></pre></td></tr></table></figure>
-<p>在你进入cell之前，你的X_in的size变成[-1,step,n_hidden_units],然后为进入cell之后有n_hidden_units个隐藏单元服务。 </p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -554,254 +455,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/01/RNN系列学习笔记一/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="yinhui">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/images.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YinHui's Bolg">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/01/RNN系列学习笔记一/" itemprop="url">RNN系列学习笔记一</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posté le</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-01T13:26:13+08:00">
-                2017-11-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/01/git对于github仓库的一般操作/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="yinhui">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/images.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YinHui's Bolg">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/01/git对于github仓库的一般操作/" itemprop="url">Git对于GitHub仓库的一般操作</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posté le</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-01T13:18:57+08:00">
-                2017-11-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="在git中添加文件"><a href="#在git中添加文件" class="headerlink" title="在git中添加文件"></a>在git中添加文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git add readme.txt</div></pre></td></tr></table></figure>
-<h3 id="把你的文件放进中间缓存当中"><a href="#把你的文件放进中间缓存当中" class="headerlink" title="把你的文件放进中间缓存当中"></a>把你的文件放进中间缓存当中</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git commit -m <span class="string">"这里面写的是你上传要加的备注，方便你的观看"</span></div></pre></td></tr></table></figure>
-<h3 id="在github上新建一个repository，这时候你想把文件上传到这个目录下面，就需要进行下面一步远程操作"><a href="#在github上新建一个repository，这时候你想把文件上传到这个目录下面，就需要进行下面一步远程操作" class="headerlink" title="在github上新建一个repository，这时候你想把文件上传到这个目录下面，就需要进行下面一步远程操作"></a>在github上新建一个repository，这时候你想把文件上传到这个目录下面，就需要进行下面一步远程操作</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> git remote add java https:<span class="comment">//github.com/yinhuil/-Offer-JAVA.git</span></div><div class="line">这里面的java是你自己起的名字，方便下一次提交的时候，就需要这波操作，直接push。  后面的网址是你新建仓库所给定的网址。（这波操作也就是把你新建的仓库，远程命名）</div></pre></td></tr></table></figure>
-<h3 id="开始把你缓存中的东西提交到github上面指定repository中"><a href="#开始把你缓存中的东西提交到github上面指定repository中" class="headerlink" title="开始把你缓存中的东西提交到github上面指定repository中"></a>开始把你缓存中的东西提交到github上面指定repository中</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git push java</div></pre></td></tr></table></figure>
-<h3 id="对指定repository，进行文件删除操作"><a href="#对指定repository，进行文件删除操作" class="headerlink" title="对指定repository，进行文件删除操作"></a>对指定repository，进行文件删除操作</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git rm --cached LSTM_mnist.py(你要删除的文件名，可以是文件也可以是文件夹)</div><div class="line">git commit -m <span class="string">"删除license"</span> 进行提交申请</div><div class="line">git push java 把这件事情告知指定仓库中</div></pre></td></tr></table></figure>
-<h3 id="删除你缓存中的所有文件"><a href="#删除你缓存中的所有文件" class="headerlink" title="删除你缓存中的所有文件"></a>删除你缓存中的所有文件</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clean -df</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -809,6 +467,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -829,8 +491,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table Des Matières
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Ensemble
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -892,6 +563,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、决策树介绍"><span class="nav-number">1.</span> <span class="nav-text">一、决策树介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、决策树的构造"><span class="nav-number">2.</span> <span class="nav-text">二、决策树的构造</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#C4-5"><span class="nav-number">2.0.1.</span> <span class="nav-text">C4.5**</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CART树的构造"><span class="nav-number">2.0.2.</span> <span class="nav-text">CART树的构造</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、决策树的剪枝"><span class="nav-number">3.</span> <span class="nav-text">三、决策树的剪枝</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1025,6 +712,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 
