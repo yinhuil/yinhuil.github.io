@@ -79,12 +79,19 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="YinHui&#39;s Bolg">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="首先将代码附上，下面是对部分核心部件进行详细阐述 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465import tensorflow as tffrom tensorflow.contrib import">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于RNN的MNIST实现和解析">
+<meta property="og:url" content="http://yoursite.com/2017/11/02/基于RNN的MNIST实现和解析-1/index.html">
 <meta property="og:site_name" content="YinHui&#39;s Bolg">
+<meta property="og:description" content="首先将代码附上，下面是对部分核心部件进行详细阐述 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465import tensorflow as tffrom tensorflow.contrib import">
+<meta property="og:image" content="c:/Users/尹辉/Desktop/blog图片/1509587774(1">
+<meta property="og:image" content="c:/Users/尹辉/Desktop/blog图片/1509587964(1">
+<meta property="og:updated_time" content="2017-11-02T02:17:40.187Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="YinHui&#39;s Bolg">
+<meta name="twitter:title" content="基于RNN的MNIST实现和解析">
+<meta name="twitter:description" content="首先将代码附上，下面是对部分核心部件进行详细阐述 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465import tensorflow as tffrom tensorflow.contrib import">
+<meta name="twitter:image" content="c:/Users/尹辉/Desktop/blog图片/1509587774(1">
 
 
 
@@ -114,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/02/基于RNN的MNIST实现和解析-1/"/>
 
 
 
 
 
-  <title>YinHui's Bolg</title>
+  <title>基于RNN的MNIST实现和解析 | YinHui's Bolg</title>
   
 
 
@@ -139,8 +146,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -243,9 +249,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -275,9 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/02/基于RNN的MNIST实现和解析-1/" itemprop="url">基于RNN的MNIST实现和解析</a></h1>
+          <h1 class="post-title" itemprop="name headline">基于RNN的MNIST实现和解析</h1>
         
 
         <div class="post-meta">
@@ -327,9 +331,7 @@
       
 
       
-        
-          
-            <p>首先将代码附上，下面是对部分核心部件进行详细阐述</p>
+        <p>首先将代码附上，下面是对部分核心部件进行详细阐述</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">from</span> tensorflow.contrib <span class="keyword">import</span> rnn</div><div class="line"><span class="keyword">from</span> LSTM <span class="keyword">import</span> input_data</div><div class="line"></div><div class="line">mnist=input_data.read_data_sets(<span class="string">"K:/deepLearning/mnist"</span>,one_hot=<span class="keyword">True</span>)</div><div class="line"></div><div class="line"><span class="comment">#  超参数</span></div><div class="line">lr=<span class="number">0.001</span></div><div class="line">training_iters=<span class="number">1000000</span></div><div class="line">batch_size=<span class="number">128</span></div><div class="line"></div><div class="line">n_input=<span class="number">28</span></div><div class="line">n_step=<span class="number">28</span></div><div class="line">n_hidden_unis=<span class="number">128</span></div><div class="line">n_class=<span class="number">10</span></div><div class="line"></div><div class="line">x=tf.placeholder(tf.float32,[<span class="keyword">None</span>,n_step,n_input])</div><div class="line">y=tf.placeholder(tf.float32,[<span class="keyword">None</span>,n_class])</div><div class="line"></div><div class="line">weights=&#123;</div><div class="line">    <span class="string">'in'</span>:tf.Variable(tf.random_normal([n_input,n_hidden_unis])),</div><div class="line">    <span class="string">'out'</span>:tf.Variable(tf.random_normal([n_hidden_unis,n_class]))</div><div class="line">&#125;</div><div class="line">biases=&#123;</div><div class="line">    <span class="string">'in'</span>:tf.Variable(tf.constant(<span class="number">0.1</span>,shape=[n_hidden_unis,])),</div><div class="line">    <span class="string">'out'</span>:tf.Variable(tf.constant(<span class="number">0.1</span>,shape=[n_class,]))</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">RNN</span><span class="params">(X,weights,biases)</span>:</span></div><div class="line"><span class="comment">#     hidden layer for input to cell</span></div><div class="line">    X=tf.reshape(X,[<span class="number">-1</span>,n_input])</div><div class="line">    X_in=tf.matmul(X,weights[<span class="string">'in'</span>])+biases[<span class="string">'in'</span>]</div><div class="line">    X_in=tf.reshape(X_in,[<span class="number">-1</span>,n_step,n_hidden_unis])</div><div class="line"></div><div class="line">    lstm_cell=rnn.BasicLSTMCell(n_hidden_unis,forget_bias=<span class="number">1.0</span>,state_is_tuple=<span class="keyword">True</span>)</div><div class="line">    因为对于rnn来说，每一层相当于使用一个参数，每一层之间的参数是不一样的，下面一个就是初始化参数</div><div class="line">    _init_state=lstm_cell.zero_state(batch_size,dtype=tf.float32)</div><div class="line">    下面就是讲初始化参数，和rnn的cell放入dynamic_rnn，把整个程序连起来。             outputs,states=tf.nn.dynamic_rnn(lstm_cell,X_in,initial_state=_init_state,time_major=<span class="keyword">False</span>)</div><div class="line">    result=tf.matmul(states[<span class="number">1</span>],weights[<span class="string">'out'</span>])+biases[<span class="string">'out'</span>]</div><div class="line">    <span class="keyword">return</span> result</div><div class="line"></div><div class="line"></div><div class="line">pred=RNN(x,weights,biases)</div><div class="line">cost=tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred,labels=y))</div><div class="line">train_op=tf.train.AdamOptimizer(lr).minimize(cost)</div><div class="line"></div><div class="line">correct_pred=tf.equal(tf.argmax(pred,<span class="number">1</span>),tf.argmax(y,<span class="number">1</span>))</div><div class="line">accuracy=tf.reduce_mean(tf.cast(correct_pred,tf.float32))</div><div class="line"></div><div class="line">init=tf.global_variables_initializer()</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(init)</div><div class="line">    step=<span class="number">0</span></div><div class="line">    <span class="keyword">while</span> step*batch_size&lt;training_iters:</div><div class="line">        batch_xs,batch_ys=mnist.train.next_batch(batch_size)</div><div class="line">        batch_xs=batch_xs.reshape([batch_size,n_step,n_input])</div><div class="line">        sess.run([train_op],feed_dict=&#123;</div><div class="line">            x:batch_xs,</div><div class="line">            y:batch_ys</div><div class="line">        &#125;)</div><div class="line">        <span class="keyword">if</span> step%<span class="number">20</span>==<span class="number">0</span>:</div><div class="line">            print(sess.run(accuracy,feed_dict=&#123;</div><div class="line">                x:batch_xs,</div><div class="line">                y:batch_ys</div><div class="line">            &#125;))</div><div class="line">        step+=<span class="number">1</span></div></pre></td></tr></table></figure>
 <h2 id="RNN的核心部件Cell"><a href="#RNN的核心部件Cell" class="headerlink" title="RNN的核心部件Cell"></a>RNN的核心部件Cell</h2><p>在很多用到rnn的书籍和paper中都可以看到类似的图</p>
 <p><img src="C:\Users\尹辉\Desktop\blog图片\1509587774(1" alt="1509587774(1)">.jpg)</p>
@@ -344,8 +346,6 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">X=tf.reshape(X,[-1,n_input])</div><div class="line">X_in=tf.matmul(X,weights[&apos;in&apos;])+biases[&apos;in&apos;]</div><div class="line">X_in=tf.reshape(X_in,[-1,step,n_hidden_units])</div></pre></td></tr></table></figure>
 <p>在你进入cell之前，你的X_in的size变成[-1,step,n_hidden_units],然后为进入cell之后有n_hidden_units个隐藏单元服务。 </p>
 
-          
-        
       
     </div>
     
@@ -362,131 +362,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/01/RNN系列学习笔记一/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="yinhui">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/images.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YinHui's Bolg">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/01/RNN系列学习笔记一/" itemprop="url">RNN系列学习笔记一</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posté le</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-01T13:26:13+08:00">
-                2017-11-01
-              </time>
+              <a href="/2017/11/01/RNN系列学习笔记一/" rel="next" title="RNN系列学习笔记一">
+                <i class="fa fa-chevron-left"></i> RNN系列学习笔记一
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -496,135 +393,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/01/git对于github仓库的一般操作/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="yinhui">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/images.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YinHui's Bolg">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/01/git对于github仓库的一般操作/" itemprop="url">Git对于GitHub仓库的一般操作</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posté le</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-01T13:18:57+08:00">
-                2017-11-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="在git中添加文件"><a href="#在git中添加文件" class="headerlink" title="在git中添加文件"></a>在git中添加文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git add readme.txt</div></pre></td></tr></table></figure>
-<h3 id="把你的文件放进中间缓存当中"><a href="#把你的文件放进中间缓存当中" class="headerlink" title="把你的文件放进中间缓存当中"></a>把你的文件放进中间缓存当中</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git commit -m <span class="string">"这里面写的是你上传要加的备注，方便你的观看"</span></div></pre></td></tr></table></figure>
-<h3 id="在github上新建一个repository，这时候你想把文件上传到这个目录下面，就需要进行下面一步远程操作"><a href="#在github上新建一个repository，这时候你想把文件上传到这个目录下面，就需要进行下面一步远程操作" class="headerlink" title="在github上新建一个repository，这时候你想把文件上传到这个目录下面，就需要进行下面一步远程操作"></a>在github上新建一个repository，这时候你想把文件上传到这个目录下面，就需要进行下面一步远程操作</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> git remote add java https:<span class="comment">//github.com/yinhuil/-Offer-JAVA.git</span></div><div class="line">这里面的java是你自己起的名字，方便下一次提交的时候，就需要这波操作，直接push。  后面的网址是你新建仓库所给定的网址。（这波操作也就是把你新建的仓库，远程命名）</div></pre></td></tr></table></figure>
-<h3 id="开始把你缓存中的东西提交到github上面指定repository中"><a href="#开始把你缓存中的东西提交到github上面指定repository中" class="headerlink" title="开始把你缓存中的东西提交到github上面指定repository中"></a>开始把你缓存中的东西提交到github上面指定repository中</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git push java</div></pre></td></tr></table></figure>
-<h3 id="对指定repository，进行文件删除操作"><a href="#对指定repository，进行文件删除操作" class="headerlink" title="对指定repository，进行文件删除操作"></a>对指定repository，进行文件删除操作</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git rm --cached LSTM_mnist.py(你要删除的文件名，可以是文件也可以是文件夹)</div><div class="line">git commit -m <span class="string">"删除license"</span> 进行提交申请</div><div class="line">git push java 把这件事情告知指定仓库中</div></pre></td></tr></table></figure>
-<h3 id="删除你缓存中的所有文件"><a href="#删除你缓存中的所有文件" class="headerlink" title="删除你缓存中的所有文件"></a>删除你缓存中的所有文件</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clean -df</div></pre></td></tr></table></figure>
-
-          
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -632,6 +405,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -652,8 +429,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table Des Matières
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Ensemble
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -715,6 +501,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RNN的核心部件Cell"><span class="nav-number">1.</span> <span class="nav-text">RNN的核心部件Cell</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -855,6 +657,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 
