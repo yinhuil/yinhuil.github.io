@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、首先介绍LR和SVM的相同点1.两者都是分类算法​    对于LR，有的人会认为他是回归算法，当然有时候会用LR来作回归问题，但是判定一个算法是回归问题还是分类问题，唯一的标准就是看label的类型，如果label是离散的，那就是分类问题，如果label是连续的那就是回归问题。 ###2.在不考虑核函数的情况下，LR和SVM都是线性的 ​    在里面首先说明一点，其实对于LR来说也是可以用核">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LR和SVM的联系与区别">
+<meta property="og:url" content="http://yoursite.com/2017/11/03/LR和SVM的联系与区别/index.html">
+<meta property="og:site_name" content="YinHui&#39;s Bolg">
+<meta property="og:description" content="一、首先介绍LR和SVM的相同点1.两者都是分类算法​    对于LR，有的人会认为他是回归算法，当然有时候会用LR来作回归问题，但是判定一个算法是回归问题还是分类问题，唯一的标准就是看label的类型，如果label是离散的，那就是分类问题，如果label是连续的那就是回归问题。 ###2.在不考虑核函数的情况下，LR和SVM都是线性的 ​    在里面首先说明一点，其实对于LR来说也是可以用核">
+<meta property="og:updated_time" content="2017-11-03T11:02:16.672Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LR和SVM的联系与区别">
+<meta name="twitter:description" content="一、首先介绍LR和SVM的相同点1.两者都是分类算法​    对于LR，有的人会认为他是回归算法，当然有时候会用LR来作回归问题，但是判定一个算法是回归问题还是分类问题，唯一的标准就是看label的类型，如果label是离散的，那就是分类问题，如果label是连续的那就是回归问题。 ###2.在不考虑核函数的情况下，LR和SVM都是线性的 ​    在里面首先说明一点，其实对于LR来说也是可以用核">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/03/LR和SVM的联系与区别/"/>
+
+
+
+
+
+  <title>LR和SVM的联系与区别 | YinHui's Bolg</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YinHui's Bolg</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/03/LR和SVM的联系与区别/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yinhui">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/images.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YinHui's Bolg">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LR和SVM的联系与区别</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posté le</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-03T19:02:16+08:00">
+                2017-11-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、首先介绍LR和SVM的相同点"><a href="#一、首先介绍LR和SVM的相同点" class="headerlink" title="一、首先介绍LR和SVM的相同点"></a>一、首先介绍LR和SVM的相同点</h2><h3 id="1-两者都是分类算法"><a href="#1-两者都是分类算法" class="headerlink" title="1.两者都是分类算法"></a>1.两者都是分类算法</h3><p>​    对于LR，有的人会认为他是回归算法，当然有时候会用LR来作回归问题，但是判定一个算法是回归问题还是分类问题，唯一的标准就是看label的类型，如果label是离散的，那就是分类问题，如果label是连续的那就是回归问题。</p>
+<p>###2.在不考虑核函数的情况下，LR和SVM都是线性的</p>
+<p>​    在里面首先说明一点，其实对于LR来说也是可以用核函数的。总之，原始的LR和SVM都是线性分类器，这也就是为什么别人会问你LR和SVM有什么区别为什么不问LR和决策树有什么区别，决策树是非线性的模型，他们两个讨论起来有什么劲呢？</p>
+<h3 id="3-两者都是监督学习算法"><a href="#3-两者都是监督学习算法" class="headerlink" title="3.两者都是监督学习算法"></a>3.两者都是监督学习算法</h3><p>​     监督学习就是在知道label情况下的算法，反之就是在不知道label的情况下</p>
+<h3 id="4-LR和SVM都是判别模型"><a href="#4-LR和SVM都是判别模型" class="headerlink" title="4.LR和SVM都是判别模型"></a>4.LR和SVM都是判别模型</h3><p>​    监督学习方法又可以分为生成方法和判别方法，所学到的模型分别称为生成模型和判别模型。判别模型会生成一个表示P(Y/X)的判别函数（或者是叫预测模型），而生成模型是先计算联合概率P(X,Y)然后通过贝叶斯公式转化为条件概率的。简单来说，计算判别模型的时候不会计算联合概率，但是在计算生成模型的时候需要提前计算联合概率。</p>
+<p>​    判别方法由数据直接学习决策函数f(X)或者条件概率分布P(X|Y)作为预测的模型，即判别模型，判别方法关心的是给定的输入X，应该预测什么样的输出Y。他不关心数据是怎么产生的，它只关心信号之间的差别，然后根据这个差别对给定的信号进行分类，典型的算法有KNN、SVM、LR、最大熵模型、提升方法和条件随机场。</p>
+<p>​    对于生成算法尝试去找到这个数据是怎么生成的，然后再对一个信号进行分类，基于你的生成假设 ，那么那个类别最有可能产生这个信号，那这个信号就属于那个类别。典型的算法有朴素贝叶斯和隐马尔可夫模型。</p>
+<p>​    生成方法的学习收敛速度更快，即当样本容量增加的时候，学到的模型可以更快的收敛于真实模型，但是罪域判别方法来说直接学习的是条件概率，直接面对预测，往往学习的准确率更高。</p>
+<h2 id="二、LR和SVM的区别"><a href="#二、LR和SVM的区别" class="headerlink" title="二、LR和SVM的区别"></a>二、LR和SVM的区别</h2><h3 id="1，最重要的首先是两者的损失函数不同"><a href="#1，最重要的首先是两者的损失函数不同" class="headerlink" title="1，最重要的首先是两者的损失函数不同"></a>1，最重要的首先是两者的损失函数不同</h3><p>​    LR的损失函数是cross entropy</p>
+<p>​<br>$$<br>J(θ)=−∑iyilog(pθ(xi))+(1−yi)log(1−pθ(xi))<br>$$<br>​    SVM的损失函数是最大化间隔距离</p>
+<p>​<br>$$<br>argmin L=1/2||w||^2<br>$$<br><strong>不同的Loss function代表了不同的假设前提，也就代表了不同的分类原理</strong></p>
+<p>对于LR方法基于最大熵模型或者你可以说是根据最大似然方法进行求得，对于SVM是认为存在最大几何间隔的分里面为最优分类面。</p>
+<h3 id="2、SVM只考虑局部的边界线附近的点，而逻辑回归考虑全局（远离的点对于边界线的确定也会起作用）"><a href="#2、SVM只考虑局部的边界线附近的点，而逻辑回归考虑全局（远离的点对于边界线的确定也会起作用）" class="headerlink" title="2、SVM只考虑局部的边界线附近的点，而逻辑回归考虑全局（远离的点对于边界线的确定也会起作用）"></a>2、SVM只考虑局部的边界线附近的点，而逻辑回归考虑全局（远离的点对于边界线的确定也会起作用）</h3><pre><code>对于LR来说，每一次遍历的时候就会根据每一个点来对其中的权重W进行更新，所以每一个点对于整个模型都会起到作用，每个样本点都会影响决策main的结果（这里并不是说每一个点对于SVM来说就不起作用了）。对于SVM来说呢？ SVM主要是为了找到支持向量，而这个支持向量就是靠着在支持向量上面的这些点来决定的，如果远离支持向量的点，对于这个模型也就没有很多的影响。 当在支持向量外添加或者减少任何样本点对分类决策面没有任何影响。
+</code></pre><p><strong>理解这一点，你可能会问，知道这个有什么作用呢？</strong></p>
+<p> 由于SVM不直接依赖于数据分布，分类平面不受一类点的影响但是LR受到所有数据点的影响，若果数据不同类别很不平衡的话，一般需要对数据提前进行balancing。</p>
+<h3 id="3-在解决非线性问题的时候，支持向量机采用核函数的机制，而LR通常不采用核函数的方法"><a href="#3-在解决非线性问题的时候，支持向量机采用核函数的机制，而LR通常不采用核函数的方法" class="headerlink" title="3.在解决非线性问题的时候，支持向量机采用核函数的机制，而LR通常不采用核函数的方法"></a>3.在解决非线性问题的时候，支持向量机采用核函数的机制，而LR通常不采用核函数的方法</h3><p>这个方法理解起来比较简单，分类模型的结果就是计算决策面，模型训练的过程就是决策面的计算过程，通过上面可以了解，在计算决策面的时候，SVM算法只有少数几个代表支持向量的样本参与了运算，也就是说只有少量的样本参与和核计算，但是在LR中，每一个样本都参与了决策面的计算过程，也就是说，如果我们在LR里也运用核函数原理的话，每一个样本点都必须参与核计算，者带来的计算复杂度是很高的。</p>
+<h3 id="4-SVM的损失函数就自带正则！！！（损失函数中的1-2-w-2项），这就是为什么SVM是结构风险最小化算法的原因！！！而LR必须另外在损失函数上添加正则项！！！"><a href="#4-SVM的损失函数就自带正则！！！（损失函数中的1-2-w-2项），这就是为什么SVM是结构风险最小化算法的原因！！！而LR必须另外在损失函数上添加正则项！！！" class="headerlink" title="4.SVM的损失函数就自带正则！！！（损失函数中的1/2||w||^2项），这就是为什么SVM是结构风险最小化算法的原因！！！而LR必须另外在损失函数上添加正则项！！！"></a>4.SVM的损失函数就自带正则！！！（损失函数中的1/2||w||^2项），这就是为什么SVM是结构风险最小化算法的原因！！！而LR必须另外在损失函数上添加正则项！！！</h3><p>​    以前一直不理解为什么SVM叫做结构风险最小化算法，所谓结构风险最小化，意思就是在训练误差和模型复杂度之间寻求平衡，防止过拟合，从而达到真实误差的最小化。未达到结构风险最小化的目的，最常用的方法就是添加正则项，后面的博客我会具体分析各种正则因子的不同，这里就不扯远了。但是，你发现没，SVM的目标函数里居然自带正则项！！！再看一下上面提到过的SVM目标函数：<br>$$<br>\Sigma^N<em>i[1-y(w*x+b)]</em>++\lambda||w||^2<br>$$<br>其中左边可以看成优化函数，右边L2正则</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/02/决策树的理解与分析/" rel="next" title="决策树的理解与分析">
+                <i class="fa fa-chevron-left"></i> 决策树的理解与分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table Des Matières
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Ensemble
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/images.jpg"
+                alt="yinhui" />
+            
+              <p class="site-author-name" itemprop="name">yinhui</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">articles</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/yinhuil" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="yinhui@bupt.edu.cn" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、首先介绍LR和SVM的相同点"><span class="nav-number">1.</span> <span class="nav-text">一、首先介绍LR和SVM的相同点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-两者都是分类算法"><span class="nav-number">1.1.</span> <span class="nav-text">1.两者都是分类算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-两者都是监督学习算法"><span class="nav-number">1.2.</span> <span class="nav-text">3.两者都是监督学习算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-LR和SVM都是判别模型"><span class="nav-number">1.3.</span> <span class="nav-text">4.LR和SVM都是判别模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、LR和SVM的区别"><span class="nav-number">2.</span> <span class="nav-text">二、LR和SVM的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1，最重要的首先是两者的损失函数不同"><span class="nav-number">2.1.</span> <span class="nav-text">1，最重要的首先是两者的损失函数不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、SVM只考虑局部的边界线附近的点，而逻辑回归考虑全局（远离的点对于边界线的确定也会起作用）"><span class="nav-number">2.2.</span> <span class="nav-text">2、SVM只考虑局部的边界线附近的点，而逻辑回归考虑全局（远离的点对于边界线的确定也会起作用）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-在解决非线性问题的时候，支持向量机采用核函数的机制，而LR通常不采用核函数的方法"><span class="nav-number">2.3.</span> <span class="nav-text">3.在解决非线性问题的时候，支持向量机采用核函数的机制，而LR通常不采用核函数的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-SVM的损失函数就自带正则！！！（损失函数中的1-2-w-2项），这就是为什么SVM是结构风险最小化算法的原因！！！而LR必须另外在损失函数上添加正则项！！！"><span class="nav-number">2.4.</span> <span class="nav-text">4.SVM的损失函数就自带正则！！！（损失函数中的1/2||w||^2项），这就是为什么SVM是结构风险最小化算法的原因！！！而LR必须另外在损失函数上添加正则项！！！</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yinhui</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Thème &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
