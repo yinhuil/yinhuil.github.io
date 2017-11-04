@@ -80,36 +80,36 @@
 
 
 <meta name="description" content="本篇博客主要讲述决策树的构建和剪枝，分析ID3、C4.5和CART的差异，最后附上决策树的实现，下面开始我的表演 一、决策树介绍定义5.1 (决策树) ：分类决策树模型是一种描述对实例进行分类的树形结构。决策树由结点(node)和有向边(directed edge)组成。结点有两种类型：内部结点(internal node )和叶结点(leaf node)。内部结点表示一个特征或属性，叶结点表示">
-<meta property="og:type" content="article">
+<meta property="og:type" content="website">
 <meta property="og:title" content="决策树的理解与分析">
-<meta property="og:url" content="http://yoursite.com/2017/11/02/决策树的理解与分析/index.html">
+<meta property="og:url" content="http://yoursite.com/机器学习/决策树的理解与分析.html">
 <meta property="og:site_name" content="YinHui&#39;s Bolg">
 <meta property="og:description" content="本篇博客主要讲述决策树的构建和剪枝，分析ID3、C4.5和CART的差异，最后附上决策树的实现，下面开始我的表演 一、决策树介绍定义5.1 (决策树) ：分类决策树模型是一种描述对实例进行分类的树形结构。决策树由结点(node)和有向边(directed edge)组成。结点有两种类型：内部结点(internal node )和叶结点(leaf node)。内部结点表示一个特征或属性，叶结点表示">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509607721(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509608563(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509608634(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509608944(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509608972(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509608841(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509609130(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509609252(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509609274(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509610141(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509611102(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509611122(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509611135(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509611421(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509611606(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509611662(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509611969(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509612597(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509613207(1">
-<meta property="og:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509623343(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509607721(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509608563(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509608634(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509608944(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509608972(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509608841(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509609130(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509609252(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509609274(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509610141(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509611102(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509611122(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509611135(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509611421(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509611606(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509611662(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509611969(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509612597(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509613207(1">
+<meta property="og:image" content="http://yoursite.com/机器学习/blog/source/1509623343(1">
 <meta property="og:updated_time" content="2017-11-03T03:19:07.059Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="决策树的理解与分析">
 <meta name="twitter:description" content="本篇博客主要讲述决策树的构建和剪枝，分析ID3、C4.5和CART的差异，最后附上决策树的实现，下面开始我的表演 一、决策树介绍定义5.1 (决策树) ：分类决策树模型是一种描述对实例进行分类的树形结构。决策树由结点(node)和有向边(directed edge)组成。结点有两种类型：内部结点(internal node )和叶结点(leaf node)。内部结点表示一个特征或属性，叶结点表示">
-<meta name="twitter:image" content="http://yoursite.com/2017/11/02/决策树的理解与分析/blog/source/1509607721(1">
+<meta name="twitter:image" content="http://yoursite.com/机器学习/blog/source/1509607721(1">
 
 
 
@@ -139,7 +139,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/02/决策树的理解与分析/"/>
+  <link rel="canonical" href="http://yoursite.com/机器学习/决策树的理解与分析.html"/>
 
 
 
@@ -270,111 +270,27 @@
 
   <div id="posts" class="posts-expand">
     
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/02/决策树的理解与分析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="yinhui">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/images.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YinHui's Bolg">
-    </span>
-
     
+    
+    <div class="post-block page">
       <header class="post-header">
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">决策树的理解与分析</h1>
-        
+	<h1 class="post-title" itemprop="name headline">决策树的理解与分析</h1>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Veröffentlicht am</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-02T15:24:02+08:00">
-                2017-11-02
-              </time>
-            
 
-            
 
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">in</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+</header>
 
       
       
-
       
-        <p> 本篇博客主要讲述决策树的构建和剪枝，分析ID3、C4.5和CART的差异，最后附上决策树的实现，下面开始我的表演</p>
+      <div class="post-body">
+        
+        
+          <p> 本篇博客主要讲述决策树的构建和剪枝，分析ID3、C4.5和CART的差异，最后附上决策树的实现，下面开始我的表演</p>
 <h1 id="一、决策树介绍"><a href="#一、决策树介绍" class="headerlink" title="一、决策树介绍"></a>一、决策树介绍</h1><p><strong>定义5.1 (决策树) ：</strong>分类决策树模型是一种描述对实例进行分类的树形结构。决策树由结点(node)和有向边(directed edge)组成。结点有两种类型：内部结点(internal node )和叶结点(leaf node)。内部结点表示一个特征或属性，叶结点表示一个类。用决策树分类，从根结点开始，对实例的某一特征进行测试，根据测试结果，将实例分配到其子结点；这时，每一个子结点对应着该特征的一个取值。如此递归地对实例进行测试并分配，直至达到叶结点。最后将实例分到叶结点的类中。</p>
 <p>图中圆和方框分别表示内部结点和叶结点</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509607721(1" alt="1509607721(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509607721(1" alt="1509607721(1)">.jpg)</p>
 <p><strong>决策树与if-then规则</strong></p>
 <p>可以将决策树看成一个if-then规则的集合，转换成if-then规则的过程：由决策树的根结点到叶结点的每一条路径构建一条规则；路径上内部结点的特征对应着规则的条件，而叶结点的类对应着规则的结论。决策树的路径或其对应的if-then规则集合具有一个重要的性质：互斥并且完备，每一个实例都被一条路径或一条规则所覆盖，而且只被一条路径或一条规则所覆盖。这里所谓覆盖是指实例的特征与路径上的特征一致或实例满足规则的条件。</p>
 <p><strong>决策树与条件概率分布</strong></p>
@@ -385,37 +301,37 @@
 <p>C4.5:根据最大增益比进行构造</p>
 <p><strong>两者的区别</strong> : 对于一个特征来说，如果它的下面有非常多的label，就拿身份证来说，每一个人的身份证编号是不一样的，那么对于信息增益来说是最大的一个特征，这个时候你可以说身份证号是最好的特征吗？ 显然不能，进行一个人物分类的话，每个人的身份证号都不一样，你拿这个特征也就没有什么意义。因为就引入了C4.5采用信息增益比来进行特征选择。从而避免这类错误的产生。</p>
 <p><strong>信息增益</strong>：特征A对训练数据集D的信息增益g(D,A)，定义为集合D的经验嫡H(D)与特征A给定条件下D的经验条件嫡H(D|A)之差，即</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509608563(1" alt="1509608563(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509608563(1" alt="1509608563(1)">.jpg)</p>
 <p><strong>信息增益比：</strong>特征A对训练数据集D的信息增益比gR(D,A)定义为其信息增益g(D,A)与训练数据集D的经验H(D)之比:</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509608634(1" alt="1509608634(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509608634(1" alt="1509608634(1)">.jpg)</p>
 <p>首先搬用李航老师的ID3和C4.5的算法</p>
 <p>###<strong>ID3</strong></p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509608944(1" alt="1509608944(1)">.jpg)</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509608972(1" alt="1509608972(1)">.jpg)</p>
-<h3 id="C4-5"><a href="#C4-5" class="headerlink" title="C4.5**"></a>C4.5**</h3><p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509608841(1" alt="1509608841(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509608944(1" alt="1509608944(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509608972(1" alt="1509608972(1)">.jpg)</p>
+<h3 id="C4-5"><a href="#C4-5" class="headerlink" title="C4.5**"></a>C4.5**</h3><p><img src="/机器学习/blog\source\1509608841(1" alt="1509608841(1)">.jpg)</p>
 <p>直接这样知道步骤还是不了解具体怎么操作，那就直接来一个例子进行表示</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509609130(1" alt="1509609130(1)">.jpg)</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509609252(1" alt="1509609252(1)">.jpg)</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509609274(1" alt="1509609274(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509609130(1" alt="1509609130(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509609252(1" alt="1509609252(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509609274(1" alt="1509609274(1)">.jpg)</p>
 <p><strong>个人理解</strong>：首先会找一个信息增益或者信息增益比最大的一个特征作为自己分割的特征A，然后会分为两边，左边是“yes“为D1，右边是”no“为D2，开始分别对D1和D2进行再一次的分割，寻找最大增益比的特征，一定要注意这个时候如果最大增益比小于某个阀值，就会变成单节点，反之会进行继续分支状态。</p>
 <h3 id="CART树的构造"><a href="#CART树的构造" class="headerlink" title="CART树的构造"></a>CART树的构造</h3><p><strong>CART</strong>:对于ID3和C4.5算法，他们主要是用于分类，但是CART树，不仅可以用于分类还可以用于回归，当进行回归时，采用平方误差最小化准则，对于分类树使用基尼指数最小化准则。 </p>
-<p><strong>首先介绍最小二乘回归树生成算法</strong><img src="/2017/11/02/决策树的理解与分析/blog\source\1509610141(1" alt="1509610141(1)">.jpg)</p>
+<p><strong>首先介绍最小二乘回归树生成算法</strong><img src="/机器学习/blog\source\1509610141(1" alt="1509610141(1)">.jpg)</p>
 <p><strong>个人理解</strong>: 这里面是首先从你们选择空间中，选择一个值K作为切分点，然后把小于K的分为D1类，把大于K的分为D2类，开始求D1和D2的均方差。通过最小均方差和这个指标来找最优切分点。注意这个时候每一个支点的权重就是类中label的均值。   也就是对于D1来说他的权重就是对应label的均值，而且都是一样的。然后依次往下进行分枝操作。</p>
 <p>下面是一个例子，可以作为参考</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509611102(1" alt="1509611102(1)">.jpg)</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509611122(1" alt="1509611122(1)">.jpg)</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509611135(1" alt="1509611135(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509611102(1" alt="1509611102(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509611122(1" alt="1509611122(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509611135(1" alt="1509611135(1)">.jpg)</p>
 <p>这道题是后面将来要讲的回归问题的提升树方法，但是原理是CART的回归问题，只是在每一步的操作中有一个求残差的运算。</p>
 <p><strong>基于CART算法分类问题</strong></p>
 <p>首先介绍基尼系数</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509611421(1" alt="1509611421(1)">.jpg)</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509611606(1" alt="1509611606(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509611421(1" alt="1509611421(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509611606(1" alt="1509611606(1)">.jpg)</p>
 <p>来一道题进行详细解释</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509611662(1" alt="1509611662(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509611662(1" alt="1509611662(1)">.jpg)</p>
 <h1 id="三、决策树的剪枝"><a href="#三、决策树的剪枝" class="headerlink" title="三、决策树的剪枝"></a>三、决策树的剪枝</h1><p><strong>到了比较难理解的剪枝操作了，当你遇到与树相关的算法时候如XGboost、GBDT等，你就应该考虑两个方面，一个是树的构造过程，另一个就是树的剪枝过程</strong></p>
 <p>首先介绍ID3和C4.5的剪枝，因为两者是一样的，所以可以放在一块啦</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509611969(1" alt="1509611969(1)">.jpg)</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509612597(1" alt="1509612597(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509611969(1" alt="1509611969(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509612597(1" alt="1509612597(1)">.jpg)</p>
 <p><strong>理解</strong>：1、这是剪枝的核心公式，对于5.11来说，前面一部分是目标函数，后面一部分是L1正则。当a确定的时候，选择损失函数最小的模型。如果子树越大，往往与训练数据的拟合很好，但是模型的复杂度比较高。相反，子树越小，模型的复杂度就越低，但是往往与训练数据的拟好效果不好。对于T来说，当a越大的时候，可以减少模型的复杂度。一个极端情况下就是当a为0的时候，就相当于直接任由树的分枝，这样最后的模型虽然很好的拟合训练集但是不能很好的拟合测试集，也就是过拟合的现象。</p>
 <p>2、一定要注意5.11的目标函数，这里面选用的是样本数*经验熵，在别处可能选择最小二乘法，绝对值法等，不能局限于此，</p>
 <p>3、对于这里面为什么要乘上一个次数，下面是我找到的理解方式，感觉还不错。</p>
@@ -425,66 +341,20 @@
 <p>既然都这么暴力了，就更暴力一点，你把Ht(T)理解成频率，Nt*Ht(T)对应地理解成次数吧。比如有A股B股两支股票，A股买了10次，赚了7次，B股买了100次，赚了50次，赚的频率分别是0.7和0.5，那么计算你投资的能力，是0.7+0.5更有意义呢还是7+50更有意义呢？我觉得7+50更有意义吧。</p>
 <p>虽然不确定性和不确定次数并非频率和次数，但它们的相对关系就这么理解吧。</p>
 <p><strong>开始讨论CARI算法的剪枝操作</strong></p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509613207(1" alt="1509613207(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509613207(1" alt="1509613207(1)">.jpg)</p>
 <p>下里面是理解cart树剪枝的核心公式</p>
-<p><img src="/2017/11/02/决策树的理解与分析/blog\source\1509623343(1" alt="1509623343(1)">.jpg)</p>
+<p><img src="/机器学习/blog\source\1509623343(1" alt="1509623343(1)">.jpg)</p>
 <p><strong>个人理解</strong>： 这里面的5.27已经是剪枝完毕后的表达式，也就是说原先的子结点已经变成当前的叶子节点，对于公式5.28，表示的是剪掉结点之前的损失函数。</p>
 
+        
+      </div>
+      
+      
       
     </div>
     
     
     
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/11/02/基于RNN的MNIST实现和解析-1/" rel="next" title="基于RNN的MNIST实现和解析">
-                <i class="fa fa-chevron-left"></i> 基于RNN的MNIST实现和解析
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/03/LR和SVM的联系与区别/" rel="prev" title="LR和SVM的联系与区别">
-                LR和SVM的联系与区别 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
   </div>
 
 
