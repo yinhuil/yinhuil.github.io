@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言：以前经常对这几个改变表示很迷糊，基本上每一次需要的时候都需要好好看一看，这一次，我要拿出来专门写一篇博客，让自己更加好好的了解他们。 本题的大纲是，会着重介绍Adaboost，GBDT和XGBoost，然后会突出自己认识和了解。最后比较他们之间的差异 一、AdaBoost介绍###1.思想介绍 ​    说到adaboost就是boost的一种典型案例，他强调的思想就是，把弱分类器组合成一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="详解AdaBoost、GBDT、RF、XGboost">
+<meta property="og:url" content="http://yoursite.com/2017/11/05/详解AdaBoost、GBDT、RF、XGboost/index.html">
+<meta property="og:site_name" content="YinHui&#39;s Bolg">
+<meta property="og:description" content="前言：以前经常对这几个改变表示很迷糊，基本上每一次需要的时候都需要好好看一看，这一次，我要拿出来专门写一篇博客，让自己更加好好的了解他们。 本题的大纲是，会着重介绍Adaboost，GBDT和XGBoost，然后会突出自己认识和了解。最后比较他们之间的差异 一、AdaBoost介绍###1.思想介绍 ​    说到adaboost就是boost的一种典型案例，他强调的思想就是，把弱分类器组合成一个">
+<meta property="og:image" content="http://upload.wikimedia.org/math/6/2/4/624cf12f420fb0f373cda9f7b216b2f3.png">
+<meta property="og:image" content="http://upload.wikimedia.org/math/d/0/1/d01e9255365440ae709190fafc071951.png">
+<meta property="og:image" content="http://img.blog.csdn.net/20141102234630160">
+<meta property="og:image" content="http://img.blog.csdn.net/20141102234909561">
+<meta property="og:image" content="http://img.blog.csdn.net/20141102235141318">
+<meta property="og:image" content="http://img.blog.csdn.net/20141102235307399">
+<meta property="og:image" content="http://img.blog.csdn.net/20141103000618960">
+<meta property="og:image" content="http://img.blog.csdn.net/20141103000759596">
+<meta property="og:image" content="http://img.blog.csdn.net/20141103001101875">
+<meta property="og:image" content="http://img.blog.csdn.net/20141103001155359">
+<meta property="og:image" content="http://yoursite.com/2017/11/05/详解AdaBoost、GBDT、RF、XGboost/blog/source/_posts/详解AdaBoost、GBDT、RF、XGboost/1509885847(1">
+<meta property="og:image" content="http://yoursite.com/2017/11/05/详解AdaBoost、GBDT、RF、XGboost/blog/source/_posts/详解AdaBoost、GBDT、RF、XGboost/1509885908(1">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/754644/201605/754644-20160530163025555-653522936.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/754644/201605/754644-20160530164442602-1288079039.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/754644/201605/754644-20160530164744149-143494562.jpg">
+<meta property="og:image" content="http://images2015.cnblogs.com/blog/754644/201605/754644-20160530170902758-1033686275.jpg">
+<meta property="og:updated_time" content="2017-11-05T11:36:23.200Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="详解AdaBoost、GBDT、RF、XGboost">
+<meta name="twitter:description" content="前言：以前经常对这几个改变表示很迷糊，基本上每一次需要的时候都需要好好看一看，这一次，我要拿出来专门写一篇博客，让自己更加好好的了解他们。 本题的大纲是，会着重介绍Adaboost，GBDT和XGBoost，然后会突出自己认识和了解。最后比较他们之间的差异 一、AdaBoost介绍###1.思想介绍 ​    说到adaboost就是boost的一种典型案例，他强调的思想就是，把弱分类器组合成一个">
+<meta name="twitter:image" content="http://upload.wikimedia.org/math/6/2/4/624cf12f420fb0f373cda9f7b216b2f3.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/05/详解AdaBoost、GBDT、RF、XGboost/"/>
+
+
+
+
+
+  <title>详解AdaBoost、GBDT、RF、XGboost | YinHui's Bolg</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YinHui's Bolg</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/详解AdaBoost、GBDT、RF、XGboost/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yinhui">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/images.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YinHui's Bolg">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">详解AdaBoost、GBDT、RF、XGboost</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-05T19:36:23+08:00">
+                2017-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>前言：以前经常对这几个改变表示很迷糊，基本上每一次需要的时候都需要好好看一看，这一次，我要拿出来专门写一篇博客，让自己更加好好的了解他们。</strong></p>
+<p>本题的大纲是，会着重介绍Adaboost，GBDT和XGBoost，然后会突出自己认识和了解。最后比较他们之间的差异</p>
+<h2 id="一、AdaBoost介绍"><a href="#一、AdaBoost介绍" class="headerlink" title="一、AdaBoost介绍"></a>一、AdaBoost介绍</h2><p>###1.思想介绍</p>
+<p>​    说到adaboost就是boost的一种典型案例，他强调的思想就是，把弱分类器组合成一个强分类器。adaboost的做法是提高那些前一轮弱分类器错误分类样本的权值，而降低哪些被正确分类样本的权值，这样一来，那些没有得到正确分类的数据，由于其权重的加大而受到后一轮的弱分类器的更大关注，于是，分类问题被一系列的弱分类器“分而治之”。最对于弱分类器的组合上，adaboost采取加权多数表决的方法，具体的就是加大分类误差小的弱分类器的权值，使其在表决中起到较大的作用，减小分类误差大的所分类器的权值，使其在表决中起到较少的作用。</p>
+<h3 id="2-算法介绍"><a href="#2-算法介绍" class="headerlink" title="2.算法介绍"></a>2.算法介绍</h3><p>  给定一个训练数据集T={(x1,y1), (x2,y2)…(xN,yN)}，其中实例<img src="http://upload.wikimedia.org/math/6/2/4/624cf12f420fb0f373cda9f7b216b2f3.png" alt="x \in \mathcal{X}">，而实例空间<img src="http://upload.wikimedia.org/math/d/0/1/d01e9255365440ae709190fafc071951.png" alt="\mathcal{X} \subset \mathbb{R}^n">，yi属于标记集合{-1,+1}，Adaboost的目的就是从训练数据中学习一系列弱分类器或基本分类器，然后将这些弱分类器组合成一个强分类器。</p>
+<p>​    Adaboost的算法流程如下：</p>
+<ul>
+<li><strong>步骤1. </strong>首先，初始化训练数据的权值分布。每一个训练样本最开始时都被赋予相同的权值：1/N。</li>
+</ul>
+<blockquote>
+<blockquote>
+<p><img src="http://img.blog.csdn.net/20141102234630160" alt="img"></p>
+</blockquote>
+</blockquote>
+<ul>
+<li><strong>步骤2.</strong> 进行多轮迭代，用m = 1,2, …, M表示迭代的第多少轮</li>
+</ul>
+<p>​    <strong>a</strong>. 使用具有权值分布Dm的训练数据集学习，得到基本分类器（选取让误差率最低的阈值来设计基本分类器）：</p>
+<blockquote>
+<blockquote>
+<p><img src="http://img.blog.csdn.net/20141102234909561" alt="img"></p>
+</blockquote>
+</blockquote>
+<p>​    <strong>b</strong>. 计算Gm(x)在训练数据集上的分类误差率</p>
+<blockquote>
+<blockquote>
+<p><img src="http://img.blog.csdn.net/20141102235141318" alt="img"></p>
+</blockquote>
+<p>由上述式子可知，Gm(x)在训练数据集上的</p>
+<p><strong>误差率</strong>em就是被Gm(x)误分类样本的权值之和</p>
+</blockquote>
+<p>​    <strong>c</strong>. 计算Gm(x)的系数，am表示Gm(x)在最终分类器中的重要程度（目的：得到基本分类器在最终分类器中所占的权重）：</p>
+<blockquote>
+<blockquote>
+<p><img src="http://img.blog.csdn.net/20141102235307399" alt="img"></p>
+</blockquote>
+<p>由上述式子可知，em &lt;= 1/2时，am &gt;= 0，且am随着em的减小而增大，意味着分类误差率越小的基本分类器在最终分类器中的作用越大。</p>
+</blockquote>
+<p>​    </p>
+<ul>
+<li>d*. 更新训练数据集的权值分布（目的：得到样本的新的权值分布），用于下一轮迭代</li>
+</ul>
+<blockquote>
+<p><img src="http://img.blog.csdn.net/20141103000618960" alt="img"></p>
+<p>使得被基本分类器Gm(x)误分类样本的权值增大，而被正确分类样本的权值减小。就这样，通过这样的方式，AdaBoost方法能“重点关注”或“聚焦于”那些较难分的样本上。</p>
+</blockquote>
+<p>​    其中，Zm是规范化因子，使得Dm+1成为一个概率分布：</p>
+<blockquote>
+<blockquote>
+<p><img src="http://img.blog.csdn.net/20141103000759596" alt="img"></p>
+</blockquote>
+</blockquote>
+<ul>
+<li><strong>步骤3. </strong>组合各个弱分类器</li>
+</ul>
+<blockquote>
+<p><img src="http://img.blog.csdn.net/20141103001101875" alt="img"></p>
+</blockquote>
+<p>​    从而得到最终分类器，如下：</p>
+<blockquote>
+<blockquote>
+<p><img src="http://img.blog.csdn.net/20141103001155359" alt="img"></p>
+</blockquote>
+</blockquote>
+<p><strong>理解：</strong>1，首先对于一个分类器进行权值赋值，这里面我们就拿第一次来说，每一个值赋值为1/N，（也就是说对于判断错误率的时候是相当于1/N*错的个数，因为第一次你可能以为就是错误的个数除以总个数N，其实不然，当你的权值变化的时候，你的错误率也就不是这么算的了）2，你通过错误率来算得$a_m$,也就是我们后来后用到的对于每一个模型的前面权重。3，通过求得$a_m$来对于每一个值进行更新权重，也就是我刚才说的为了第二次算新的模型的时候算错误率来用的。</p>
+<p><strong>扩展</strong>：这里面所算$a_m$的方法，是基于损失函数是指数函数利用前向分步算法所求的方法，针对boost方法，adaboost只是其中的一种特例。 对于提升回归树的情况，就是针对于损失函数是平方法的前向分步算法所得来的，针对损失函数不同的情况，后面我会介绍梯度提升方法。</p>
+<h3 id="3，梯度提升方法（以回归为例）"><a href="#3，梯度提升方法（以回归为例）" class="headerlink" title="3，梯度提升方法（以回归为例）"></a>3，梯度提升方法（以回归为例）</h3><p>对于给定的输入：训练数据集$T=(x1,y1),(x2,y2),…,(xn,yn)$,损失函数$L(y,f(x))$;<br>输出结果：一棵回归树$f~(x)$</p>
+<p>（1）首先初始化<br>$$<br>f0(x)=argminc∑i=1NL(yi,c)<br>$$<br>估计一个使损失函数极小化的常数值，此时它只有一个节点的树；</p>
+<p>（2）迭代的建立M棵提升树<br>$for m=1 to M:$（第一层循环）<br>$for i=1 to N$：（第二层循环） 计算损失函数的负梯度在当前模型的值，并将它作为残差的估计值。<br>$$<br>r<em>{mi}=−[\frac{∂L(yi,f(xi))}{∂f(xi)}]</em>{f(x)=f<em>{m−1}(x)}<br>$$<br>对于$r</em>{mi}$拟合一棵回归树，得到第m棵树的叶节点区域$R_{mj},j=1,2,…,J$</p>
+<p>$for j=1 to J$：（第二层循环）,计算：<br>$$<br>c<em>{mj}=argminc\sum</em>{xiϵRmj}L(yi,f_{m−1}(x_i)+c)<br>$$<br>利用线性搜索估计叶节点区域的值，使损失函数极小化；</p>
+<p>然后，更新$fm(x)=f<em>{m−1}(x)+\sum</em>{j=1}^Jc<em>{mj}I(xϵR</em>{mj})$</p>
+<p>（3）最后得到的fm(x)就是我们最终的模型<br>$$<br>f(x)=f<em>M(x)=\sum</em>{m=1}^M\sum<em>{j=1}^Jc</em>{mj}I(xϵR<em>{mj})<br>$$<br><strong>理解：</strong>首先第二层循环当中，第一次是为了找到顺着梯度下降方向的$R</em>{mj}$，第二步是为了找到使损失函数极小化的常数值，它是一个只有根结点的树。 接下来你会在GBDT和XGBoost中看到他们的身影</p>
+<h2 id="二，GBDT介绍"><a href="#二，GBDT介绍" class="headerlink" title="二，GBDT介绍"></a>二，GBDT介绍</h2><p><img src="/2017/11/05/详解AdaBoost、GBDT、RF、XGboost/blog\source\_posts\详解AdaBoost、GBDT、RF、XGboost\1509885847(1" alt="1509885847(1)">.jpg)</p>
+<p><img src="/2017/11/05/详解AdaBoost、GBDT、RF、XGboost/blog\source\_posts\详解AdaBoost、GBDT、RF、XGboost\1509885908(1" alt="1509885908(1)">.jpg)</p>
+<h2 id="三，XGBoost"><a href="#三，XGBoost" class="headerlink" title="三，XGBoost"></a>三，XGBoost</h2><h2 id="Xgboost"><a href="#Xgboost" class="headerlink" title="Xgboost"></a>Xgboost</h2><p>　　Xgboost是GB算法的高效实现，xgboost中的基学习器除了可以是CART（gbtree）也可以是线性分类器（gblinear）。下面所有的内容来自原始paper，包括公式。</p>
+<p>　　(1). xgboost在目标函数中显示的加上了正则化项，基学习为CART时，正则化项与树的叶子节点的数量T和叶子节点的值有关。</p>
+<p><img src="http://images2015.cnblogs.com/blog/754644/201605/754644-20160530163025555-653522936.jpg" alt="img"></p>
+<p>　　(2). GB中使用Loss Function对f(x)的一阶导数计算出伪残差用于学习生成fm(x)，xgboost不仅使用到了一阶导数，还使用二阶导数。</p>
+<p>　　　　第t次的loss：</p>
+<p><img src="http://images2015.cnblogs.com/blog/754644/201605/754644-20160530164442602-1288079039.jpg" alt="img"></p>
+<p>　　　　对上式做二阶泰勒展开：g为一阶导数，h为二阶导数</p>
+<p><img src="http://images2015.cnblogs.com/blog/754644/201605/754644-20160530164744149-143494562.jpg" alt="img"></p>
+<p>　　(3). 上面提到CART回归树中寻找最佳分割点的衡量标准是最小化均方差，xgboost寻找分割点的标准是最大化，lamda，gama与正则化项相关</p>
+<p><img src="http://images2015.cnblogs.com/blog/754644/201605/754644-20160530170902758-1033686275.jpg" alt="img"></p>
+<p> 　　xgboost算法的步骤和GB基本相同，都是首先初始化为一个常数，gb是根据一阶导数ri，xgboost是根据一阶导数gi和二阶导数hi，迭代生成基学习器，相加更新学习器。</p>
+<h2 id="四、XGBoost、GBDT的比较"><a href="#四、XGBoost、GBDT的比较" class="headerlink" title="四、XGBoost、GBDT的比较"></a>四、XGBoost、GBDT的比较</h2><h3 id="xgboost相比传统gbdt有何不同？xgboost为什么快？xgboost如何支持并行？"><a href="#xgboost相比传统gbdt有何不同？xgboost为什么快？xgboost如何支持并行？" class="headerlink" title="xgboost相比传统gbdt有何不同？xgboost为什么快？xgboost如何支持并行？"></a>xgboost相比传统gbdt有何不同？xgboost为什么快？xgboost如何支持并行？</h3><ul>
+<li>传统GBDT以CART作为基分类器，xgboost还支持线性分类器，这个时候xgboost相当于带L1和L2正则化项的逻辑斯蒂回归（分类问题）或者线性回归（回归问题）。</li>
+<li>传统GBDT在优化时只用到一阶导数信息，xgboost则对代价函数进行了二阶泰勒展开，同时用到了一阶和二阶导数。顺便提一下，xgboost工具支持自定义代价函数，只要函数可一阶和二阶求导。</li>
+<li>xgboost在代价函数里加入了正则项，用于控制模型的复杂度。正则项里包含了树的叶子节点个数、每个叶子节点上输出的score的L2模的平方和。从Bias-variance tradeoff角度来讲，正则项降低了模型的variance，使学习出来的模型更加简单，防止过拟合，这也是xgboost优于传统GBDT的一个特性。</li>
+<li>Shrinkage（缩减），相当于学习速率（xgboost中的eta）。xgboost在进行完一次迭代后，会将叶子节点的权重乘上该系数，主要是为了削弱每棵树的影响，让后面有更大的学习空间。实际应用中，一般把eta设置得小一点，然后迭代次数设置得大一点。（补充：传统GBDT的实现也有学习速率）</li>
+<li>列抽样（column subsampling）。xgboost借鉴了随机森林的做法，支持列抽样，不仅能降低过拟合，还能减少计算，这也是xgboost异于传统gbdt的一个特性。</li>
+</ul>
+<ul>
+<li>对缺失值的处理。对于特征的值有缺失的样本，xgboost可以自动学习出它的分裂方向。</li>
+<li>xgboost工具支持并行。boosting不是一种串行的结构吗?怎么并行的？注意xgboost的并行不是tree粒度的并行，xgboost也是一次迭代完才能进行下一次迭代的（第t次迭代的代价函数里包含了前面t-1次迭代的预测值）。xgboost的并行是在特征粒度上的。我们知道，决策树的学习最耗时的一个步骤就是对特征的值进行排序（因为要确定最佳分割点），xgboost在训练之前，预先对数据进行了排序，然后保存为block结构，后面的迭代中重复地使用这个结构，大大减小计算量。这个block结构也使得并行成为了可能，在进行节点的分裂时，需要计算每个特征的增益，最终选增益最大的那个特征去做分裂，那么各个特征的增益计算就可以开多线程进行。</li>
+</ul>
+<ul>
+<li>可并行的近似直方图算法。树节点在进行分裂时，我们需要计算每个特征的每个分割点对应的增益，即用贪心法枚举所有可能的分割点。当数据无法一次载入内存或者在分布式情况下，贪心算法效率就会变得很低，所以xgboost还提出了一种可并行的近似直方图算法，用于高效地生成候选的分割点。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/03/hexo的一般操作与问题/" rel="next" title="hexo的一般操作与问题">
+                <i class="fa fa-chevron-left"></i> hexo的一般操作与问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/images.jpg"
+                alt="yinhui" />
+            
+              <p class="site-author-name" itemprop="name">yinhui</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/yinhuil" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="yinhui@bupt.edu.cn" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、AdaBoost介绍"><span class="nav-number">1.</span> <span class="nav-text">一、AdaBoost介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-算法介绍"><span class="nav-number">1.1.</span> <span class="nav-text">2.算法介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3，梯度提升方法（以回归为例）"><span class="nav-number">1.2.</span> <span class="nav-text">3，梯度提升方法（以回归为例）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二，GBDT介绍"><span class="nav-number">2.</span> <span class="nav-text">二，GBDT介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三，XGBoost"><span class="nav-number">3.</span> <span class="nav-text">三，XGBoost</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Xgboost"><span class="nav-number">4.</span> <span class="nav-text">Xgboost</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、XGBoost、GBDT的比较"><span class="nav-number">5.</span> <span class="nav-text">四、XGBoost、GBDT的比较</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#xgboost相比传统gbdt有何不同？xgboost为什么快？xgboost如何支持并行？"><span class="nav-number">5.1.</span> <span class="nav-text">xgboost相比传统gbdt有何不同？xgboost为什么快？xgboost如何支持并行？</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yinhui</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
