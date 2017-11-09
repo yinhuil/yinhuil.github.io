@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本篇博客用代码的形式实现在数据集MNIST上的噪声对抗，也就是CNN实现MNIST的同时添加噪声 全部代码请参考github 引入所需要的包123456789import matplotlib.pyplot as pltimport tensorflow as tfimport numpy as npfrom sklearn.metrics import  confusion_matriximpo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在MNIST上实现噪声对抗">
+<meta property="og:url" content="http://yoursite.com/2017/11/09/在MNIST上实现噪声对抗/index.html">
+<meta property="og:site_name" content="YinHui&#39;s Bolg">
+<meta property="og:description" content="本篇博客用代码的形式实现在数据集MNIST上的噪声对抗，也就是CNN实现MNIST的同时添加噪声 全部代码请参考github 引入所需要的包123456789import matplotlib.pyplot as pltimport tensorflow as tfimport numpy as npfrom sklearn.metrics import  confusion_matriximpo">
+<meta property="og:updated_time" content="2017-11-09T13:20:39.275Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在MNIST上实现噪声对抗">
+<meta name="twitter:description" content="本篇博客用代码的形式实现在数据集MNIST上的噪声对抗，也就是CNN实现MNIST的同时添加噪声 全部代码请参考github 引入所需要的包123456789import matplotlib.pyplot as pltimport tensorflow as tfimport numpy as npfrom sklearn.metrics import  confusion_matriximpo">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/09/在MNIST上实现噪声对抗/"/>
+
+
+
+
+
+  <title>在MNIST上实现噪声对抗 | YinHui's Bolg</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YinHui's Bolg</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/09/在MNIST上实现噪声对抗/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yinhui">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/images.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YinHui's Bolg">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">在MNIST上实现噪声对抗</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-09T21:20:39+08:00">
+                2017-11-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>本篇博客用代码的形式实现在数据集MNIST上的噪声对抗，也就是CNN实现MNIST的同时添加噪声</strong></p>
+<p>全部代码请参考github</p>
+<h3 id="引入所需要的包"><a href="#引入所需要的包" class="headerlink" title="引入所需要的包"></a>引入所需要的包</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span>  confusion_matrix</div><div class="line"><span class="keyword">import</span>  time</div><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> timedelta</div><div class="line"><span class="keyword">import</span> math</div><div class="line"><span class="keyword">import</span> prettytensor <span class="keyword">as</span> pt</div><div class="line"><span class="keyword">from</span> LSTM <span class="keyword">import</span> input_data</div></pre></td></tr></table></figure>
+<p>这里面的input_data是你可以下载的，只是我放在别的包里面直接引用了</p>
+<p>如果可以的话你也可以使用下面方式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> tensorflow.examples.tutorials.mnist <span class="keyword">import</span> input_data</div><div class="line">data = input_data.read_data_sets(<span class="string">'data/MNIST/'</span>, one_hot=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<h3 id="定义接下来代码中所需要的参数"><a href="#定义接下来代码中所需要的参数" class="headerlink" title="定义接下来代码中所需要的参数"></a>定义接下来代码中所需要的参数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">img_size=<span class="number">28</span></div><div class="line">img_size_flat=img_size*img_size</div><div class="line">img_shape=(img_size,img_size)</div><div class="line">num_channels=<span class="number">1</span></div><div class="line">num_classes=<span class="number">10</span></div></pre></td></tr></table></figure>
+<h3 id="可以将MNIST图片打印的函数"><a href="#可以将MNIST图片打印的函数" class="headerlink" title="可以将MNIST图片打印的函数"></a>可以将MNIST图片打印的函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_images</span><span class="params">(images,cls_true,cls_pred=None,noise=<span class="number">0.0</span>)</span>:</span></div><div class="line">    <span class="keyword">assert</span> len(images)==len(cls_true)==<span class="number">9</span></div><div class="line">    fig,axes=plt.subplots(<span class="number">3</span>,<span class="number">3</span>)</div><div class="line">    fig.subplots_adjust(hspace=<span class="number">0.3</span>,wspace=<span class="number">0.3</span>)</div><div class="line">    <span class="keyword">for</span> i,ax <span class="keyword">in</span> enumerate(axes.flat):</div><div class="line">        image=images[i].reshape(img_shape)</div><div class="line">        image+=noise</div><div class="line">        image=np.clip(image,<span class="number">0.0</span>,<span class="number">1.0</span>)</div><div class="line">        ax.imshow(image,cmap=<span class="string">'binary'</span>,interpolation=<span class="string">'nearest'</span>)</div><div class="line">        <span class="keyword">if</span> cls_pred <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">            xlabel=<span class="string">"True :&#123;0&#125;"</span>.format(cls_true[i])</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            xlabel=<span class="string">"True:&#123;0&#125;,pred:&#123;1&#125;"</span>.format(cls_true[i],cls_pred[i])</div><div class="line">        ax.set_xlabel(xlabel)</div><div class="line">        ax.set_xticks([])</div><div class="line">        ax.set_yticks([])</div><div class="line">    plt.show()</div></pre></td></tr></table></figure>
+<p>你可以通过下面的代码进行测试上面的函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">images=data.test.images[<span class="number">0</span>:<span class="number">9</span>]</div><div class="line">cls_true=data.test.cls[<span class="number">0</span>:<span class="number">9</span>]</div><div class="line">plot_images(images=images,cls_true=cls_true)</div></pre></td></tr></table></figure>
+<h3 id="定义tensorflow的变量"><a href="#定义tensorflow的变量" class="headerlink" title="定义tensorflow的变量"></a>定义tensorflow的变量</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x=tf.placeholder(tf.float32,shape=[<span class="keyword">None</span>,img_size_flat],name=<span class="string">'x'</span>)</div><div class="line">x_image=tf.reshape(x,[<span class="number">-1</span>,img_size,img_size,num_channels])</div><div class="line">y_true=tf.placeholder(tf.float32,shape=[<span class="keyword">None</span>,num_classes],name=<span class="string">'y_true'</span>)</div><div class="line">y_true_cls=tf.argmax(y_true,dimension=<span class="number">1</span>)</div></pre></td></tr></table></figure>
+<h3 id="添加adversarial-Noise"><a href="#添加adversarial-Noise" class="headerlink" title="添加adversarial Noise"></a>添加adversarial Noise</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">noise_limit=<span class="number">0.35</span></div><div class="line">noise_l2_weight=<span class="number">0.02</span></div><div class="line">ADVERSARY_VARIABLES=<span class="string">'adversary_variables'</span></div><div class="line">collections=[tf.GraphKeys.VARIABLES,ADVERSARY_VARIABLES]</div><div class="line">x_noise=tf.Variable(tf.zeros([img_size,img_size,num_channels]),</div><div class="line">                    name=<span class="string">'x_noise'</span>,trainable=<span class="keyword">False</span>,collections=collections)</div><div class="line">x_noise_clip=tf.assign(x_noise,tf.clip_by_value(x_noise,</div><div class="line">                                                -noise_limit,noise_limit))</div><div class="line">x_noisy_image=x_image+x_noise</div><div class="line">x_noisy_image=tf.clip_by_value(x_noisy_image,<span class="number">0.0</span>,<span class="number">1.0</span>)</div></pre></td></tr></table></figure>
+<h3 id="定义神经网络层"><a href="#定义神经网络层" class="headerlink" title="定义神经网络层"></a>定义神经网络层</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">x_pretty=pt.wrap(x_noisy_image)</div><div class="line"><span class="keyword">with</span> pt.defaults_scope(activation_fn=tf.nn.relu):</div><div class="line">    y_pred,loss= (x_pretty. \</div><div class="line">                  conv2d(kernel=<span class="number">5</span>, depth=<span class="number">16</span>, name=<span class="string">'layer_conv1'</span>). \</div><div class="line">                  max_pool(kernel=<span class="number">2</span>, stride=<span class="number">2</span>). \</div><div class="line">                  conv2d(kernel=<span class="number">5</span>, depth=<span class="number">36</span>, name=<span class="string">'layer_conv2'</span>).\</div><div class="line">                  max_pool(kernel=<span class="number">2</span>,stride=<span class="number">2</span>).\</div><div class="line">                  flatten().\</div><div class="line">                  fully_connected(size=<span class="number">128</span>,name=<span class="string">'layer_fc1'</span>).\</div><div class="line">                  softmax_classifier(num_classes=num_classes,labels=y_true)</div><div class="line">                  )</div></pre></td></tr></table></figure>
+<p>本次采用的是prettytensor对于CNN的包装效果，可以很大的简化代码，强力推荐使用</p>
+<p>你可以使用下面的代码将训练的参数进行输出</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># for var in tf.trainable_variables():</span></div><div class="line"><span class="comment">#     print(var.name)</span></div></pre></td></tr></table></figure>
+<h3 id="CNN的反向优化"><a href="#CNN的反向优化" class="headerlink" title="CNN的反向优化"></a>CNN的反向优化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">optimizer=tf.train.AdamOptimizer(learning_rate=<span class="number">1e-4</span>).minimize(loss)</div><div class="line"><span class="comment"># 对adaversarial noise 反向优化</span></div><div class="line">adversary_variables=tf.get_collection(ADVERSARY_VARIABLES)</div><div class="line"><span class="comment"># for var in adversary_variables:</span></div><div class="line"><span class="comment">#     print(var.name)</span></div><div class="line">l2_loss_noise=noise_l2_weight*tf.nn.l2_loss(x_noise)</div><div class="line">loss_adversary=loss+l2_loss_noise</div><div class="line">optimizer_adversary = tf.train.AdamOptimizer(learning_rate=<span class="number">1e-2</span>).minimize(loss_adversary, var_list=adversary_variables)</div></pre></td></tr></table></figure>
+<p>这里面是将噪声反向传播的时候使用L2正则方式。</p>
+<h3 id="对结果测试"><a href="#对结果测试" class="headerlink" title="对结果测试"></a>对结果测试</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">y_pred_cls=tf.argmax(y_pred,dimension=<span class="number">1</span>)</div><div class="line">correct_prediction=tf.equal(y_pred_cls,y_true_cls)</div><div class="line">accuracy=tf.reduce_mean(tf.cast(correct_prediction,tf.float32))</div></pre></td></tr></table></figure>
+<h3 id="开始运行tensorflow"><a href="#开始运行tensorflow" class="headerlink" title="开始运行tensorflow"></a>开始运行tensorflow</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">session=tf.Session()</div><div class="line">session.run(tf.global_variables_initializer())</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">init_noise</span><span class="params">()</span>:</span></div><div class="line">    session.run(tf.variables_initializer([x_noise]))</div><div class="line">init_noise()</div><div class="line"><span class="comment"># Helper-function to perform optimization iterations</span></div><div class="line">train_batch_size=<span class="number">64</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">optimize</span><span class="params">(num_iterations,adversary_target_cls=None)</span>:</span></div><div class="line">    start_time=time.time()</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_iterations):</div><div class="line">        x_batch,y_true_batch=data.train.next_batch(train_batch_size)</div><div class="line">        <span class="keyword">if</span> adversary_target_cls <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            y_true_batch=np.zeros_like(y_true_batch)</div><div class="line">            y_true_batch[:,adversary_target_cls]=<span class="number">1.0</span></div><div class="line">        feed_dict_train=&#123;x:x_batch,</div><div class="line">                         y_true:y_true_batch&#125;</div><div class="line">        <span class="keyword">if</span> adversary_target_cls <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">            session.run(optimizer,feed_dict=feed_dict_train)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            session.run(optimizer_adversary,feed_dict=feed_dict_train)</div><div class="line">            session.run(x_noise_clip)</div><div class="line">        <span class="keyword">if</span>(i%<span class="number">100</span>==<span class="number">0</span>)<span class="keyword">or</span>(i==num_iterations<span class="number">-1</span>):</div><div class="line">            acc=session.run(accuracy,feed_dict=feed_dict_train)</div><div class="line">            msg=<span class="string">"optimization Iteration :&#123;0:&gt;6&#125;,Training accuracy:&#123;1:&gt;6.1%&#125;"</span></div><div class="line">            print(msg.format(i,acc))</div><div class="line">    end_time=time.time()</div><div class="line">    time_dif=end_time-start_time</div><div class="line">    print(<span class="string">"time usage:"</span>+str(timedelta(seconds=int(round(time_dif)))))</div></pre></td></tr></table></figure>
+<h3 id="获得噪声和噪声的图片"><a href="#获得噪声和噪声的图片" class="headerlink" title="获得噪声和噪声的图片"></a>获得噪声和噪声的图片</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_noise</span><span class="params">()</span>:</span></div><div class="line">    noise=session.run(x_noise)</div><div class="line">    <span class="keyword">return</span> np.squeeze(noise)</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_noise</span><span class="params">()</span>:</span></div><div class="line">    noise=get_noise()</div><div class="line">    print(<span class="string">"noise:"</span>)</div><div class="line">    print(<span class="string">"--Min:"</span>,noise.min())</div><div class="line">    print(<span class="string">"--Max:"</span>,noise.max())</div><div class="line">    print(<span class="string">"--std:"</span>,noise.std())</div><div class="line">    plt.imshow(noise,interpolation=<span class="string">'nearest'</span>,cmap=<span class="string">'seismic'</span>,</div><div class="line">               vmin=<span class="number">-1.0</span>,vmax=<span class="number">1.0</span>)</div></pre></td></tr></table></figure>
+<h3 id="将错误的样例显示"><a href="#将错误的样例显示" class="headerlink" title="将错误的样例显示"></a>将错误的样例显示</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">def plot_example_errors(cls_pred,correct):</div><div class="line">    incorrect=(correct==False)</div><div class="line">    images=data.test.images[incorrect]</div><div class="line">    cls_pred=cls_pred[incorrect]</div><div class="line">    cls_true=data.test.cls[incorrect]</div><div class="line">    noise=get_noise()</div><div class="line">    plot_images(images=images[0:9],</div><div class="line">                cls_true=cls_true[0:9],</div><div class="line">                cls_pred=cls_pred[0:9],</div><div class="line">                noise=noise)</div><div class="line"># 显示confusion matrix</div><div class="line">def plot_confusion_matrix(cls_pred):</div><div class="line">    cls_true=data.test.cls</div><div class="line">    cm=confusion_matrix(y_true=cls_true,</div><div class="line">                        y_pred=cls_pred)</div><div class="line">    print(cm)</div></pre></td></tr></table></figure>
+<h3 id="测试集进行测试"><a href="#测试集进行测试" class="headerlink" title="测试集进行测试"></a>测试集进行测试</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">test_batch_size=<span class="number">256</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_test_accuracy</span><span class="params">(show_example_errors=False,show_confusion_matrix=False)</span>:</span></div><div class="line">    num_test=len(data.test.images)</div><div class="line">    cls_pred=np.zeros(shape=num_test,dtype=np.int)</div><div class="line">    i=<span class="number">0</span></div><div class="line">    <span class="keyword">while</span> i&lt;num_test:</div><div class="line">        j=min(i+test_batch_size,num_test)</div><div class="line">        images=data.test.images[i:j,:]</div><div class="line">        labels=data.test.labels[i:j,:]</div><div class="line">        feed_dict=&#123;x:images,y_true:labels&#125;</div><div class="line">        cls_pred[i:j]=session.run(y_pred_cls,feed_dict=feed_dict)</div><div class="line">        i=j</div><div class="line">    cls_true=data.test.cls</div><div class="line">    correct=(cls_true==cls_pred)</div><div class="line">    correct_sum=correct.sum()</div><div class="line">    acc=float(correct_sum)/num_test</div><div class="line">    msg=<span class="string">"Accuracy on Test-set:&#123;0:.1%&#125;(&#123;1&#125;/&#123;2&#125;"</span></div><div class="line">    print(msg.format(acc,correct_sum,num_test))</div><div class="line"></div><div class="line">    <span class="keyword">if</span> show_example_errors:</div><div class="line">        print(<span class="string">"example errors:"</span>)</div><div class="line">        plot_example_errors(cls_pred=cls_pred,correct=correct)</div><div class="line">    <span class="keyword">if</span> show_confusion_matrix:</div><div class="line">        print(<span class="string">"confusion Matrix:"</span>)</div><div class="line">        plot_confusion_matrix(cls_pred=cls_pred)</div></pre></td></tr></table></figure>
+<h3 id="代码的测试和运行"><a href="#代码的测试和运行" class="headerlink" title="代码的测试和运行"></a>代码的测试和运行</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">optimize(num_iterations=<span class="number">1000</span>)</div><div class="line">print_test_accuracy(show_example_errors=<span class="keyword">True</span>)</div><div class="line"><span class="comment"># find the adversarial noise</span></div><div class="line">init_noise()</div><div class="line">optimize(num_iterations=<span class="number">1000</span>,adversary_target_cls=<span class="number">3</span>)</div><div class="line">plot_noise()</div><div class="line"></div><div class="line">print_test_accuracy(show_example_errors=<span class="keyword">True</span>,show_confusion_matrix=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>第一个optimize表示没有加入噪声的最后的结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">optimization Iteration :     0,Training accuracy: 12.5%</div><div class="line">optimization Iteration :   100,Training accuracy: 89.1%</div><div class="line">optimization Iteration :   200,Training accuracy: 81.2%</div><div class="line">optimization Iteration :   300,Training accuracy: 85.9%</div><div class="line">optimization Iteration :   400,Training accuracy: 89.1%</div><div class="line">optimization Iteration :   500,Training accuracy: 90.6%</div><div class="line">optimization Iteration :   600,Training accuracy: 95.3%</div><div class="line">optimization Iteration :   700,Training accuracy: 95.3%</div><div class="line">optimization Iteration :   800,Training accuracy: 93.8%</div><div class="line">optimization Iteration :   900,Training accuracy: 96.9%</div><div class="line">optimization Iteration :   999,Training accuracy: 96.9%</div></pre></td></tr></table></figure>
+<p>第二个表示加入噪声的，最后的结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">optimization Iteration :     0,Training accuracy:  9.4%</div><div class="line">optimization Iteration :   100,Training accuracy:100.0%</div><div class="line">optimization Iteration :   200,Training accuracy: 95.3%</div><div class="line">optimization Iteration :   300,Training accuracy: 93.8%</div><div class="line">optimization Iteration :   400,Training accuracy: 95.3%</div><div class="line">optimization Iteration :   500,Training accuracy: 95.3%</div><div class="line">optimization Iteration :   600,Training accuracy:100.0%</div><div class="line">optimization Iteration :   700,Training accuracy: 98.4%</div><div class="line">optimization Iteration :   800,Training accuracy: 95.3%</div><div class="line">optimization Iteration :   900,Training accuracy: 90.6%</div><div class="line">optimization Iteration :   999,Training accuracy: 92.2%</div></pre></td></tr></table></figure>
+<p>有没有发现中间性能得到了提升</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/05/详解AdaBoost、GBDT、RF、XGboost/" rel="next" title="详解AdaBoost、GBDT、RF、XGboost">
+                <i class="fa fa-chevron-left"></i> 详解AdaBoost、GBDT、RF、XGboost
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/images.jpg"
+                alt="yinhui" />
+            
+              <p class="site-author-name" itemprop="name">yinhui</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/yinhuil" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="yinhui@bupt.edu.cn" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引入所需要的包"><span class="nav-number">1.</span> <span class="nav-text">引入所需要的包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义接下来代码中所需要的参数"><span class="nav-number">2.</span> <span class="nav-text">定义接下来代码中所需要的参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可以将MNIST图片打印的函数"><span class="nav-number">3.</span> <span class="nav-text">可以将MNIST图片打印的函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义tensorflow的变量"><span class="nav-number">4.</span> <span class="nav-text">定义tensorflow的变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加adversarial-Noise"><span class="nav-number">5.</span> <span class="nav-text">添加adversarial Noise</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义神经网络层"><span class="nav-number">6.</span> <span class="nav-text">定义神经网络层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CNN的反向优化"><span class="nav-number">7.</span> <span class="nav-text">CNN的反向优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对结果测试"><span class="nav-number">8.</span> <span class="nav-text">对结果测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开始运行tensorflow"><span class="nav-number">9.</span> <span class="nav-text">开始运行tensorflow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获得噪声和噪声的图片"><span class="nav-number">10.</span> <span class="nav-text">获得噪声和噪声的图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将错误的样例显示"><span class="nav-number">11.</span> <span class="nav-text">将错误的样例显示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试集进行测试"><span class="nav-number">12.</span> <span class="nav-text">测试集进行测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码的测试和运行"><span class="nav-number">13.</span> <span class="nav-text">代码的测试和运行</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yinhui</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
